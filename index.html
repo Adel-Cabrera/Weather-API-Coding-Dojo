@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/e5e1fd3f88.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+      <div class="margin-t">
+    <div class="container bg-light rounded-lg square-form">
+      <h1 class="text-center"><i class="fas fa-cloud-sun-rain"></i> <i class="fas fa-snowflake"></i> What's my <span>temp</span>erature? <i class="fas fa-umbrella"></i> <i class="fas fa-cloud-moon-rain"></i></h1>
+      <div class="row">
+        <div class="col">
+          <form class="mb-3" action="index.html" method="get">
+              <div class="form-group">
+            <label for="city">City</label>
+            <input class="form-control " type="text" name="" value="">
+            <button class="mt-2 btn btn-danger btn-api" type="submit" value="Submit" name="button">Generate</button>
+              </div>
+          </form>
+        </div>
+        <div class="col weather-api">
+          <p class="fwb">Result</p>
+          <p class="p-api"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+        var apiKey = "a8c86c46bdb66e48a575064032f63110";
+        var x = 0;
+        var temp = 0;
+        var val = 0;
+        var map, lat, lon;
+
+
+        $('form').submit(function() {
+            // your code here (build up your url)
+            var city = $('input').val();
+            var url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&&appid=" + apiKey;
+
+            $.get(url, function(res) {
+              console.log(res);
+              x = res.cod;
+              temp = res.main.temp;
+              lat = res.coord.lat;
+              console.log(lat)
+
+              lon = res.coord.lon;
+              console.log(lon)
+
+              val = temp - 273.15;
+            }, 'json')
+            .done(function() {
+              $('.p-api').text(val.toFixed(2) + "º celsius");
+              initMap(lat, lon);
+            })
+            .fail(function() {
+              $('.p-api').text("Wrong city");
+            })
+
+              //console.log(res.main.temp);
+
+            // don't forget to return false so the page doesn't refresh
+            return false;
+        });
+
+      function initMap(lat, lon) {
+          map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: lat, lng: lon},
+          zoom: 8
+        });
+      }
+
+    });
+
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3b--CFrQb5ZksCFv-1-Nfljyz_1oEDK8&callback=initMap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
